@@ -1,1 +1,36 @@
-<p>formulari works!</p>
+<h2>Introduïu les coordenades</h2>
+<form (ngSubmit)="getPuntsInteres()">
+ <h2>Dades latitud</h2>
+    <label>
+    Latitud mínima:
+    <input type="number" [(ngModel)]="latMin" name="latMin" required>
+  </label>
+  <label>
+    Latitud màxima:
+    <input type="number" [(ngModel)]="latMax" name="latMax" required>
+  </label>
+  <h2>Dades longitud</h2>
+    <label>
+        Longitud mínima:
+        <input type="number" [(ngModel)]="lngMin" name="lngMin" required>
+    </label>
+    <label>
+        Longitud màxima:
+        <input type="number" [(ngModel)]="lngMax" name="lngMax" required>
+    </label>
+    <br>
+    <br>
+    <button type="submit">Obtenir nous punts d'interès</button>
+    </form>
+
+  <h2>Punts d'interès per:</h2>
+    <div>
+        Latitud: {{ latMin }} - {{ latMax }}<br>
+        Longitud: {{ lngMin }} - {{ lngMax }}
+    </div><br>
+    <select [(ngModel)]="selectedPoint">
+    <option *ngFor="let point of pointsOfInterest">{{ point.name }}</option>
+</select>
+
+<h2>Altura sobre el nivell del mar</h2>
+<p *ngIf="selectedPoint">{{ selectedPoint.elevation }} metres</p>
