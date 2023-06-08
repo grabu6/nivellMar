@@ -21,16 +21,19 @@
     <br>
     <br>
     <button type="submit">Obtenir nous punts d'interès</button>
-    </form>
+</form>
 
-  <h2>Punts d'interès per:</h2>
-    <div>
-        Latitud: {{ latMin }} - {{ latMax }}<br>
-        Longitud: {{ lngMin }} - {{ lngMax }}
-    </div><br>
-    <select [(ngModel)]="selectedPoint">
-    <option *ngFor="let point of pointsOfInterest">{{ point.name }}</option>
-</select>
-
-<h2>Altura sobre el nivell del mar</h2>
-<p *ngIf="selectedPoint">{{ selectedPoint.elevation }} metres</p>
+<form (ngSubmit)="getElevation()">
+    <h2>Punts d'interès per:</h2>
+        <div>
+            Latitud: {{ latMin }} - {{ latMax }}<br>
+            Longitud: {{ lngMin }} - {{ lngMax }}
+        </div><br>
+    <select name="puntInteres" [(ngModel)]="this.pointOfInterest">
+        <option *ngFor="let point of pointsOfInterest" [ngValue]="point">{{ point.nom }}</option>
+    </select>
+    <br>
+    <br>
+    <button type="submit">Obtenir dades elevació</button>    
+    <h2>{{this.textAltitud}}</h2>    
+</form>

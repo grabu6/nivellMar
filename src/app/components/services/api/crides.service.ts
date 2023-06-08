@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { OpenTripMaps } from '../../../../environments/OpenTripMaps/environmentOpenTripMaps';
+import { BingMaps } from '../../../../environments/BingMaps/environmentBingMaps';
 
 @Injectable({
   providedIn: 'root'
@@ -8,23 +9,24 @@ import { environment } from '../../../../environments/environment';
 export class CridesService {
 
   constructor(private http: HttpClient) { }
-  requestOptions = this.createHeader();
   
-  private apiUrl = environment.apiUrl;
-  private apiKey = environment.apiKey;
+  
+  private apiUrlOpenTrip = OpenTripMaps.apiUrl;
+  private apiKeyOpenTrip = OpenTripMaps.apiKey;
+
+  private apiUrlBigMaps=BingMaps.apiUrl;
+  private apiKeyBingMaps=BingMaps.apiKey;
 
   getPuntsInteres(latMin: number, latMax: number, lngMin: number, lngMax: number) {
-    const url = `${this.apiUrl}?latMin=${latMin}&latMax=${latMax}&lngMin=${lngMin}&lngMax=${lngMax}`;
-    return this.http.get(url,this.requestOptions);
+    const url = `${this.apiUrlOpenTrip}en/places/bbox?lon_min=${lngMin}&lon_max=${lngMax}&lat_min=${latMin}&lat_max=${latMax}&format=json&apikey=${this.apiKeyOpenTrip}`;
+    return this.http.get(url);
   }
   
-  private createHeader(){
+  getElevation(lat: number, lng: number) {
+    const url = `${this.apiUrlBigMaps}Elevation/List/?points=${lat},${lng}&key=${this.apiKeyBingMaps}`;
+    return this.http.get(url);
+  }
 
-    const header = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${this.apiKey}`
-    }
-    return {headers: new HttpHeaders(header)};
 }
-}
+
+
