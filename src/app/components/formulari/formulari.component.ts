@@ -8,46 +8,126 @@ import { PuntsInteres } from 'src/app/model/implementations/puntsInteres/puntsIn
   styleUrls: ['./formulari.component.css']
 })
 export class FormulariComponent {
-
-  textAltitud="";
+  error = "";
+  textAltitud = "";
   latMin!: number;
   latMax!: number;
   lngMin!: number;
   lngMax!: number;
-  pointsOfInterestSet: any[]= [];
-  pointsOfInterest: PuntsInteres[]= [];
-  pointOfInterest=new PuntsInteres(0, '', 0, 0);
-  selectedPoint: any;
+  nom!: string;
+  categoria!: string;
+  valoracioMinima!: number;
+  pointsOfInterestSet: any[] = [];
+  pointsOfInterest: PuntsInteres[] = [];
+  pointOfInterest = new PuntsInteres(0, '', 0, 0);
+  mapImageUrl: string | null = null;
+  mapZoom!: number;
 
   constructor(private cridesService: CridesService) {}
 
   getPuntsInteres() {
-    this.cridesService.getPuntsInteres(this.latMin, this.latMax, this.lngMin, this.lngMax)
-      .subscribe((data:any) => {
-        data.forEach((element: any) => {
-          if(!this.pointsOfInterestSet.find((p: any) => p.xid === element.xid)) {
-            const puntInteres= new PuntsInteres(element.xid, element.name, element.point.lat, element.point.lon);
-            this.pointsOfInterest.push(puntInteres);
-            this.pointsOfInterestSet.push(element.xid);
+    if (
+      this.latMin > -90 ||
+      this.latMin < 90 ||
+      this.latMax > -90 ||
+      this.latMax < 90 ||
+      this.lngMin > -180 ||
+      this.lngMin < 180 ||
+      this.lngMax > -180 ||
+      this.lngMax < 180
+    ) {
+      if (this.latMin <= this.latMax) {
+        if (this.lngMin <= this.lngMax) {
+          this.cridesService
+            .getPuntsInteres(
+              this.latMin,
+              this.latMax,
+              this.lngMin,
+              this.lngMax,
+              this.categoria,
+              this.valoracioMinima,
+              this.nom
+            )
+            .subscribe(
+              (data: any) => {
+                data.forEach((element: any) => {
+                  if (
+                    !this.pointsOfInterestSet.find(
+                      (p: any) => p.xid === element.xid
+                    )
+                  ) {
+                    const puntInteres = new PuntsInteres(
+                      element.xid,
+                      element.name,
+                      element.point.lat,
+                      element.point.lon
+                    );
+                    this.pointsOfInterest.push(puntInteres);
+                    this.pointsOfInterestSet.push(element.xid);
+                  }
+                });
+              },
+              (error: any) => {
+                console.error(error);
+              }
+            );
+        } else {
+          this.error = "El valor mínim de longitud és superior al valor màxim";
         }
-      });},
-        (error: any) => {
-          console.error(error);
-        }
-      );
-  }
-
-  getElevation(){
-    if(this.pointOfInterest==null){
-      this.textAltitud="No has seleccionat cap punt d'interès";
-    }else{
-    
-    this.cridesService.getElevation(this.pointOfInterest.latitud, this.pointOfInterest.longitud)
-      .subscribe((data:any) => {
-        this.textAltitud="Altura sobre el nivell del mar: "+data.resourceSets[0].resources[0].elevations[0];
-    },(error: any) => {
-      console.error(error);
-    });
+      } else {
+        this.error = "El valor mínim de latitud és superior al valor màxim";
+      }
+    } else {
+      this.error = "Els valors introduïts no són correctes";
     }
   }
-}
+
+  getElevationData() {
+    if (this.pointOfInterest == null) {
+      this.textAltitud = "No has seleccionat cap punt d'interès";
+      this.mapImageUrl = null;
+    } else {
+      this.cridesService
+        .getElevation(this.pointOfInterest.latitud, this.pointOfInterest.longitud)
+        .subscribe(
+          (data: any) => {
+            this.textAltitud =
+              "Altura sobre el nivell del mar: " +
+              data.resourceSets[0].resources[0].elevations[0];
+          },
+          (error: any) => {
+            console.error(error);
+          }
+        );
+    }
+  }
+  
+  getMapImage() {
+    if (this.pointOfInterest == null) {
+      this.textAltitud = "No has seleccionat cap punt d'interès";
+      this.mapImageUrl = null;
+    } else {
+      this.cridesService
+        .getMapImage(
+          this.pointOfInterest.latitud,
+          this.pointOfInterest.longitud,
+          this.mapZoom
+        )
+        .subscribe(
+          (imageData: any) => {
+            this.mapImageUrl = imageData.resourceSets[0].resources[0].imageUrl;
+          },
+          (error: any) => {
+            console.error(error);
+            this.mapImageUrl = null;
+          }
+        );
+    }
+  }
+
+  zoom(zoom: number){
+    this.mapZoom += zoom;
+    this.getMapImage();
+  }
+    
+}  

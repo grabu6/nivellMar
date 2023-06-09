@@ -1,7 +1,7 @@
 <h2>Introduïu les coordenades</h2>
 <form (ngSubmit)="getPuntsInteres()">
- <h2>Dades latitud</h2>
-    <label>
+  <h2>Dades latitud</h2>
+  <label>
     Latitud mínima:
     <input type="number" [(ngModel)]="latMin" name="latMin" required>
   </label>
@@ -10,30 +10,64 @@
     <input type="number" [(ngModel)]="latMax" name="latMax" required>
   </label>
   <h2>Dades longitud</h2>
-    <label>
-        Longitud mínima:
-        <input type="number" [(ngModel)]="lngMin" name="lngMin" required>
-    </label>
-    <label>
-        Longitud màxima:
-        <input type="number" [(ngModel)]="lngMax" name="lngMax" required>
-    </label>
-    <br>
-    <br>
-    <button type="submit">Obtenir nous punts d'interès</button>
+  <label>
+    Longitud mínima:
+    <input type="number" [(ngModel)]="lngMin" name="lngMin" required>
+  </label>
+  <label>
+    Longitud màxima:
+    <input type="number" [(ngModel)]="lngMax" name="lngMax" required>
+  </label>
+  <br>
+  <h2>Filtres</h2>
+  <label>
+    Categoría:
+    <input type="text" [(ngModel)]="categoria" name="categoria">
+  </label>
+  <label>
+    Nom:
+    <input type="text" [(ngModel)]="nom" name="nom">
+  </label>
+  <label>
+    Valoració mínima:
+    <input type="number" [(ngModel)]="valoracioMinima" name="valoracioMinima">
+  </label>
+  <br>
+  <p *ngIf="error" class="error-message">{{ error }}</p>
+  <br>
+  <button type="submit">Obtenir nous punts d'interès</button>
 </form>
 
-<form (ngSubmit)="getElevation()">
-    <h2>Punts d'interès per:</h2>
-        <div>
-            Latitud: {{ latMin }} - {{ latMax }}<br>
-            Longitud: {{ lngMin }} - {{ lngMax }}
-        </div><br>
-    <select name="puntInteres" [(ngModel)]="this.pointOfInterest">
-        <option *ngFor="let point of pointsOfInterest" [ngValue]="point">{{ point.nom }}</option>
-    </select>
-    <br>
-    <br>
-    <button type="submit">Obtenir dades elevació</button>    
-    <h2>{{this.textAltitud}}</h2>    
+<form (ngSubmit)="getElevationData()">
+  <h2>Punts d'interès per:</h2>
+  <div>
+    Latitud: {{ latMin }} - {{ latMax }}<br>
+    Longitud: {{ lngMin }} - {{ lngMax }}
+  </div>
+  <br>
+  <select name="puntInteres" [(ngModel)]="this.pointOfInterest">
+    <option *ngFor="let point of pointsOfInterest" [ngValue]="point">{{ point.nom }}</option>
+  </select>
+  <br>
+  <br>
+  <button type="submit">Obtenir dades elevació</button>
+  <h2>{{ this.textAltitud }}</h2>
 </form>
+<form (ngSubmit)="getMapImage()">
+  
+    <div *ngIf="pointOfInterest">
+        <h2>Dades del mapa</h2>
+        <label>
+            Zoom del mapa:
+            <input type="number" [(ngModel)]="mapZoom" name="mapZoom">
+        </label><br><br>
+
+      <button type="submit">Obtenir imatge del mapa</button><br><br>
+
+      <img *ngIf="mapImageUrl" [src]="mapImageUrl" alt="Map Image">
+
+      <button type="+" (click)="zoom(1)">+</button><br>
+      <button type="-" (click)="zoom(-1)">-</button>
+    </div>
+  </form>
+  
