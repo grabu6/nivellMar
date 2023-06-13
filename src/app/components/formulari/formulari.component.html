@@ -52,6 +52,9 @@
   <br>
   <button type="submit">Obtenir dades elevació</button>
   <h2>{{ this.textAltitud }}</h2>
+  <img *ngIf="imgCopyright" [src]="imgCopyright" alt="Map Image">
+  <p>{{this.stringCopyright}}</p>
+
 </form>
 <form (ngSubmit)="getMapImage()">
   

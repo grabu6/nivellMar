@@ -22,6 +22,8 @@ export class FormulariComponent {
   pointOfInterest = new PuntsInteres(0, '', 0, 0);
   mapImageUrl: string | null = null;
   mapZoom!: number;
+  imgCopyright:string | null = null;
+  stringCopyright:string|null=null;
 
   constructor(private cridesService: CridesService) {}
 
@@ -94,6 +96,8 @@ export class FormulariComponent {
             this.textAltitud =
               "Altura sobre el nivell del mar: " +
               data.resourceSets[0].resources[0].elevations[0];
+              this.imgCopyright=data.brandLogoUri;
+              this.stringCopyright=data.copyright;
           },
           (error: any) => {
             console.error(error);
@@ -124,6 +128,7 @@ export class FormulariComponent {
         );
     }
   }
+  
 
   zoom(zoom: number){
     this.mapZoom += zoom;

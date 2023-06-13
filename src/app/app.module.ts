@@ -10,9 +10,9 @@ import { HttpClientModule} from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
-    FormulariComponent,
+    FormulariComponent
   ],
-  imports: [
+  imports:[
     BrowserModule,
     AppRoutingModule,
     FormsModule,

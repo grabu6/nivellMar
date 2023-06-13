@@ -30,8 +30,7 @@ export class CridesService {
     const url = `${this.apiUrlBigMaps}Imagery/Metadata/Aerial/${lat},${lng}?zoomLevel=${zoom}&include=ImageryProviders&key=${this.apiKeyBingMaps}`;
     console.log(url);
     return this.http.get(url);
-  }
-  
+  }  
 }
 
 
